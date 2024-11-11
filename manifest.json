@@ -3,12 +3,12 @@
   "name": "Berufsschule Motivation",
   "icons": [
     {
-      "src": "/images/icon-192-maskable.png",
+      "src": "/icon-192-maskable.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/images/icon-512-maskable.png",
+      "src": "/icon-512-maskable.png",
       "type": "image/png",
       "sizes": "512x512"
     }
