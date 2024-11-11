@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berufsschule Motivationsboost</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        input[type="time"] {
+            font-size: 1rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .earnings {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Progress bar styling */
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #4caf50;
+            width: 0;
+            transition: width 0.2s ease-in-out;
+        }
+
+        .progress-text {
+            margin-top: 5px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Berufsschule Motivationsboost</h1>
+        <label for="start-time">Wann hast du fauler Sack heute angefangen:</label>
+        <input type="time" id="start-time">
+
+        <label for="end-time">Du willst schon wieder Feierabend machen, FRECHHEIT:</label>
+        <input type="time" id="end-time">
+
+        <div class="earnings" id="earnings">€0.00</div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-text" id="progress-text">Progress: 0%</div>
+    </div>
+
+    <script>
+        const HOURLY_RATE = 6.78;
+
+        // Function to calculate earnings
+        function calculateEarnings() {
+            const startTimeInput = localStorage.getItem("startTime");
+            if (startTimeInput) {
+                const startTime = new Date();
+                const [startHours, startMinutes] = startTimeInput.split(":");
+                startTime.setHours(startHours, startMinutes, 0, 0);
+
+                const now = new Date();
+                const hoursWorked = (now - startTime) / (1000 * 60 * 60);
+                const earnings = (hoursWorked * HOURLY_RATE).toFixed(2);
+
+                document.getElementById("earnings").textContent = `€${earnings}`;
+            }
+        }
+
+        // Function to update the progress bar
+        function updateProgressBar() {
+            const startTimeInput = localStorage.getItem("startTime");
+            const endTimeInput = localStorage.getItem("endTime");
+            if (startTimeInput && endTimeInput) {
+                const startTime = new Date();
+                const [startHours, startMinutes] = startTimeInput.split(":");
+                startTime.setHours(startHours, startMinutes, 0, 0);
+
+                const endTime = new Date();
+                const [endHours, endMinutes] = endTimeInput.split(":");
+                endTime.setHours(endHours, endMinutes, 0, 0);
+
+                const now = new Date();
+
+                if (now >= startTime && now <= endTime) {
+                    const totalWorkTime = endTime - startTime;
+                    const timeElapsed = now - startTime;
+                    const progressPercent = (timeElapsed / totalWorkTime) * 100;
+
+                    document.getElementById("progress-bar").style.width = `${progressPercent.toFixed(2)}%`;
+                    document.getElementById("progress-text").textContent = `Progress: ${progressPercent.toFixed(2)}%`;
+                } else if (now < startTime) {
+                    // If before start time
+                    document.getElementById("progress-bar").style.width = "0%";
+                    document.getElementById("progress-text").textContent = "Progress: 0%";
+                } else {
+                    // If past end time
+                    document.getElementById("progress-bar").style.width = "100%";
+                    document.getElementById("progress-text").textContent = "Progress: 100%";
+                }
+            }
+        }
+
+        // Event listeners for start and end time input
+        document.getElementById("start-time").addEventListener("input", function() {
+            const startTime = this.value;
+            localStorage.setItem("startTime", startTime);
+            calculateEarnings();
+            updateProgressBar();
+        });
+
+        document.getElementById("end-time").addEventListener("input", function() {
+            const endTime = this.value;
+            localStorage.setItem("endTime", endTime);
+            updateProgressBar();
+        });
+
+        // Load saved start and end times on page load and set up interval
+        window.onload = function() {
+            const savedStartTime = localStorage.getItem("startTime");
+            const savedEndTime = localStorage.getItem("endTime");
+            if (savedStartTime) {
+                document.getElementById("start-time").value = savedStartTime;
+                calculateEarnings();
+            }
+            if (savedEndTime) {
+                document.getElementById("end-time").value = savedEndTime;
+            }
+            updateProgressBar();
+            // Update earnings and progress every second
+            setInterval(() => {
+                calculateEarnings();
+                updateProgressBar();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
