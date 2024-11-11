@@ -3,18 +3,18 @@
   "name": "Berufsschule Motivation",
   "icons": [
     {
-      "src": "/icon-192-maskable.png",
+      "src": "icon-192-maskable.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/icon-512-maskable.png",
+      "src": "icon-512-maskable.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
-  "id": "/?source=pwa",
-  "start_url": "/?source=pwa",
+  "id": "/",
+  "start_url": "/",
   "background_color": "#3367D6",
   "display": "standalone",
   "scope": "/",
