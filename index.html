@@ -5,6 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berufsschule Motivationsboost</title>
     <style>
+    /* Light and Dark Theme Styles */
+    body.light-theme {
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    .container.light-theme {
+        background: rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+    body.dark-theme {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+        color: #fff;
+    }
+
+    .container.dark-theme {
+        background: rgba(0.59, 0.41, 0.00, 0.28);
+        color: #fff;
+    }
+
+    /* Button styling */
+    .theme-selector, .fullscreen-btn {
+        margin-top: 15px;
+        padding: 10px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .theme-selector {
+        background-color: #4caf50;
+        color: #fff;
+    }
+
+    .fullscreen-btn {
+        background-color: #2196f3;
+        color: #fff;
+    }
+</style>
+
+    <style>
         body {
             display: flex;
             align-items: center;
@@ -13,8 +56,7 @@
             font-family: Arial, sans-serif;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #6dd5ed, #2193b0);
-            color: #fff;
+
         }
 
         h1 {
@@ -90,7 +132,68 @@
             <div class="progress-bar" id="progress-bar"></div>
         </div>
         <div class="progress-text" id="progress-text">Progress: 0%</div>
+
+        <div>
+    <!-- Theme Selector Dropdown -->
+    <select id="theme-selector" class="theme-selector">
+        <option value="dark">Dark Theme</option>
+        <option value="light">Light Theme</option>
+    </select>
+
+    <!-- Fullscreen Toggle Button -->
+    <button id="fullscreen-btn" class="fullscreen-btn">Enter Fullscreen</button>
+</div>
+
     </div>
+
+    <script>
+        // Theme Selector Functionality
+        const themeSelector = document.getElementById("theme-selector");
+        const body = document.body;
+        const container = document.querySelector(".container");
+
+        // Apply saved theme on load
+        function applyTheme(theme) {
+            body.classList.remove("light-theme", "dark-theme");
+            container.classList.remove("light-theme", "dark-theme");
+            body.classList.add(`${theme}-theme`);
+            container.classList.add(`${theme}-theme`);
+        }
+
+        // Load saved theme or default to dark
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        themeSelector.value = savedTheme;
+        applyTheme(savedTheme);
+
+        // Update theme on selection
+        themeSelector.addEventListener("change", function() {
+            const selectedTheme = this.value;
+            localStorage.setItem("theme", selectedTheme);
+            applyTheme(selectedTheme);
+        });
+
+        // Fullscreen Button Functionality
+        const fullscreenBtn = document.getElementById("fullscreen-btn");
+
+        fullscreenBtn.addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                fullscreenBtn.textContent = "Exit Fullscreen";
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = "Enter Fullscreen";
+            }
+        });
+
+        // Update button text on fullscreen change
+        document.addEventListener("fullscreenchange", () => {
+            if (document.fullscreenElement) {
+                fullscreenBtn.textContent = "Exit Fullscreen";
+            } else {
+                fullscreenBtn.textContent = "Enter Fullscreen";
+            }
+        });
+    </script>
 
     <script>
         const HOURLY_RATE = 6.78;
